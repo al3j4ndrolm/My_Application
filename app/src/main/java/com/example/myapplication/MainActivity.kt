@@ -8,8 +8,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScopeInstance.matchParentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -52,63 +54,94 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Image(painter = painterResource(id = R.drawable.androidparty), contentDescription = "Background" )
-    Column (
-        verticalArrangement = Arrangement.Center)
-    {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = "Welcome",
-            fontSize = 60.sp,
-            lineHeight = 0.sp,
-            textAlign = TextAlign.Center,
-            color = Color.hsl(hue = 150f, saturation = 0.71f, lightness = 0.85f),
-            fontStyle = FontStyle.Italic,
-            fontWeight = FontWeight.ExtraBold
-
+    Box(modifier = Modifier) {
+        Column(
+            verticalArrangement = Arrangement.Center
         )
-        Text(
-            text = "Home",
-            fontSize = 60.sp ,
-            modifier = Modifier.fillMaxWidth(),
-            color = Color.hsl(hue = 345f, saturation = 0.69f, lightness = 0.66f),
-            fontStyle = FontStyle.Italic,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.ExtraBold,
-            letterSpacing = 20.sp
-        )
-        Text(
-            text = "Bruno",
-            fontSize = 90.sp,
-            modifier = Modifier.fillMaxWidth(),
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            fontStyle = FontStyle.Italic,
-            fontWeight = FontWeight.ExtraBold
-        )
-        Box(modifier = Modifier
-            .size(
-                500.dp, 320.dp
-            )
-            .border(5.dp, Color.White)
-            .background(Color.White)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.bruno),
-                contentDescription = "bruno's photo",
+        {
+            Box(
                 modifier = Modifier
-                    .size(450.dp, 400.dp)
-            )
-        }
-        Text(
-            text = "From: YY and Alejandro",
-            modifier = Modifier.fillMaxWidth().padding(10.dp),
-            textAlign = TextAlign.Right,
-            fontStyle = FontStyle.Italic,
-            fontSize = 24.sp,
+                    .background(color = Color.hsl(199f, 0.70f, 0.87f))
+                    .size(400.dp, 55.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .size(200.dp, 55.dp)
+                        .align(Alignment.Center),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .size(150.dp, 55.dp),
+                        text = "CuteCat",
+                        fontSize = 40.sp,
+                        lineHeight = 0.sp,
+                        textAlign = TextAlign.Center,
+                        color = Color.Black,
+                        fontStyle = FontStyle.Italic,
+                        fontWeight = FontWeight.ExtraBold,
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.black_cat),
+                        contentDescription = "cat_logo"
+                    )
 
-            )
+                }
+
+            }
+            Box(
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.funny_cat_blog_15_desktop_background),
+                    contentDescription = "Welcome_Photo"
+                )
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                ) {
+                    Text(
+                        text = "TODAY CAT:",
+                        fontSize = 35.sp,
+                        fontWeight = FontWeight(1000),
+                        fontStyle = FontStyle.Normal,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .size(210.dp, 50.dp)
+                    )
+                    Text(
+                        text = "Butters",
+                        fontSize = 35.sp,
+                        fontWeight = FontWeight(250),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .size(150.dp, 50.dp)
+                    )
+                }
+
+
+            }
+            Box(
+                modifier = Modifier.fillMaxHeight()
+            ) {
+//                Column() {
+//                    Image(
+//                        painter = painterResource(id = R.drawable.background_paws),
+//                        contentDescription = "Background",
+//                        modifier = Modifier
+//                            .size(800.dp,400.dp)
+//                    )
+//                    Image(
+//                        painter = painterResource(id = R.drawable.background_paws),
+//                        contentDescription = "Background",
+//                        modifier = Modifier
+//                            .size(800.dp,800.dp)
+//                    )
+//                }
+            }
+        }
     }
+
 }
 
 @Preview(showBackground = true, showSystemUi = true)
