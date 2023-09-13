@@ -5,32 +5,33 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScopeInstance.matchParentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
@@ -54,6 +55,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
+    var result by remember { mutableStateOf(1) }
+    val imageResource = when (result) {
+        1 -> R.drawable.funny_cat_1
+        2 -> R.drawable.funny_cat_2
+        else -> {R.drawable.funnny_cat_3}
+    }
     Box(modifier = Modifier) {
         Column(
             verticalArrangement = Arrangement.Center
@@ -118,30 +125,42 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                             .size(150.dp, 50.dp)
                     )
                 }
-
-
             }
             Box(
-                modifier = Modifier.fillMaxHeight()
+                modifier = Modifier.fillMaxWidth()
             ) {
-//                Column() {
-//                    Image(
-//                        painter = painterResource(id = R.drawable.background_paws),
-//                        contentDescription = "Background",
-//                        modifier = Modifier
-//                            .size(800.dp,400.dp)
-//                    )
-//                    Image(
-//                        painter = painterResource(id = R.drawable.background_paws),
-//                        contentDescription = "Background",
-//                        modifier = Modifier
-//                            .size(800.dp,800.dp)
-//                    )
-//                }
+                Image(
+                    painter = painterResource(id = R.drawable.background_paws),
+                    contentDescription = "Background",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(800.dp, 900.dp)
+
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(modifier = Modifier
+                        .size(300.dp,300.dp),
+                        contentScale = ContentScale.Crop,
+                        painter = painterResource(imageResource),
+                        contentDescription = "Funny_cat_1"
+                    )
+                    Button(onClick = {
+                        result = result + 1
+                        if (result > 3 ) {
+                            result = 1
+                        }
+                    }) {
+                        Text(stringResource(R.string.login))
+
+                    }
+                }
             }
         }
     }
-
 }
 
 @Preview(showBackground = true, showSystemUi = true)
