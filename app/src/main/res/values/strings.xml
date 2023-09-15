@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="login">Change photo</string>
+    <string name="next_button">Next</string>
+    <string name="last_button">Last</string>
 </resources>

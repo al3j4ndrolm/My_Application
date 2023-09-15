@@ -59,7 +59,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     val imageResource = when (result) {
         1 -> R.drawable.funny_cat_1
         2 -> R.drawable.funny_cat_2
-        else -> {R.drawable.funnny_cat_3}
+        else -> {
+            R.drawable.funnny_cat_3
+        }
     }
     Box(modifier = Modifier) {
         Column(
@@ -142,20 +144,24 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Image(modifier = Modifier
-                        .size(300.dp,300.dp),
+                    Image(
+                        modifier = Modifier
+                            .size(300.dp, 300.dp),
                         contentScale = ContentScale.Crop,
                         painter = painterResource(imageResource),
                         contentDescription = "Funny_cat_1"
                     )
-                    Button(onClick = {
-                        result = result + 1
-                        if (result > 3 ) {
-                            result = 1
+                    Row() {
+                        Button(onClick = {
+                            result = result - 1
+                        }, enabled = result > 1) {
+                            Text(stringResource(R.string.last_button))
                         }
-                    }) {
-                        Text(stringResource(R.string.login))
-
+                        Button(onClick = {
+                            result = result + 1
+                        }, enabled = result < 3) {
+                            Text(stringResource(R.string.next_button))
+                        }
                     }
                 }
             }
