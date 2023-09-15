@@ -151,7 +151,10 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                         painter = painterResource(imageResource),
                         contentDescription = "Funny_cat_1"
                     )
-                    Row() {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
                         Button(onClick = {
                             result = result - 1
                         }, enabled = result > 1) {
