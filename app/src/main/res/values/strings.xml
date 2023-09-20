@@ -1,5 +1,19 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Los Gatitos</string>
     <string name="next_button">Next</string>
     <string name="last_button">Last</string>
+
+    <!--    Cat relevant texts-->
+    <!--    Tails -->
+    <string name="tails_name">Tails</string>
+    <string name="tails_before_action_text">Tails is wondering where is his food...</string>
+    <string name="tails_after_action_text">Tails is happy after you feed him!</string>
+    <!--    Bruno-->
+    <string name="bruno_name">Bruno</string>
+    <string name="bruno_before_action_text">Seems like Bruno wants to play...</string>
+    <string name="bruno_after_action_text">Bruno is excited for play with you!</string>
+    <!--    Tabby-->
+    <string name="tabby_before_action_text">Tabby is looking for Friday...</string>
+    <string name="tabby_after_action_text">It\'s just Wednesday, go back to work!</string>
+    <string name="tabby_name">Tabby</string>
 </resources>

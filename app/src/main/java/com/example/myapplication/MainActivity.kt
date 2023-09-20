@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -49,7 +51,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Yingying BABA")
+                    Greeting(shouldPlaySound = true)
                 }
             }
         }
@@ -57,29 +59,54 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(shouldPlaySound: Boolean) {
     var result by remember { mutableStateOf(1) }
-    val imageResource = when (result) {
-        1 -> R.drawable.tails
-        2 -> R.drawable.bruno
-        else -> {
-            R.drawable.tabby
-        }
-    }
-    val catName = when (result) {
-        1 -> "Tails"
-        2 -> "Bruno"
-        else -> {
-            "Tabby"
-        }
-    }
     var isCatHappy by remember {
         mutableStateOf(false)
     }
 
+    val catTails = Cat(
+        nameResId = R.string.tails_name,
+        beforeActionTextResId = R.string.tails_before_action_text,
+        afterActionTextResId = R.string.tails_after_action_text,
+        imageResId = R.drawable.tails,
+        actionSoundEffectResId = R.raw.tails_after_action_sound_effect
+    )
+    val catBruno = Cat(
+        nameResId = R.string.bruno_name,
+        beforeActionTextResId = R.string.bruno_before_action_text,
+        afterActionTextResId = R.string.bruno_after_action_text,
+        imageResId = R.drawable.bruno,
+        actionSoundEffectResId = R.raw.bruno_after_action_sound_effect
+    )
+    val catTabby = Cat(
+        nameResId = R.string.tabby_name,
+        beforeActionTextResId = R.string.tabby_before_action_text,
+        afterActionTextResId = R.string.tabby_after_action_text,
+        imageResId = R.drawable.tabby,
+        actionSoundEffectResId = R.raw.tabby_after_action_sound_effect
+    )
+
+    val currentCat = when (result) {
+        1 -> catTails
+        2 -> catBruno
+        else -> {
+            catTabby
+        }
+    }
+
+    val catName = stringResource(id = currentCat.nameResId)
     val actionText =
-        if (isCatHappy) "$catName is happier after your petting!"
-        else "$catName seems to want pet..."
+        if (isCatHappy) stringResource(id = currentCat.afterActionTextResId)
+        else stringResource(id = currentCat.beforeActionTextResId)
+    val catSound = if (shouldPlaySound) MediaPlayer.create(
+        LocalContext.current,
+        currentCat.actionSoundEffectResId
+    ) else null
+
+    catSound?.setOnCompletionListener {
+        it.release()
+    }
 
     Box(modifier = Modifier) {
         Column(
@@ -99,8 +126,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                 ) {
                     Text(
                         modifier = Modifier
-                            .size(200.dp, 55.dp),
-                        text = "Los Gatos",
+                            .size(220.dp, 55.dp),
+                        text = stringResource(id = R.string.app_name),
                         fontSize = 40.sp,
                         lineHeight = 0.sp,
                         textAlign = TextAlign.Center,
@@ -143,13 +170,16 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(modifier = Modifier.clickable { isCatHappy = !isCatHappy }) {
+                    Box(modifier = Modifier.clickable {
+                        isCatHappy = !isCatHappy
+                        catSound?.start()
+                    }) {
                         Image(
                             modifier = Modifier
                                 .size(300.dp, 300.dp)
                                 .clip(RoundedCornerShape(24.dp)),
                             contentScale = ContentScale.Crop,
-                            painter = painterResource(imageResource),
+                            painter = painterResource(currentCat.imageResId),
                             contentDescription = "Funny_cat_1"
                         )
                     }
@@ -197,10 +227,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     }
 }
 
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
     MyApplicationTheme {
-        Greeting("Yingying and Alejandro went to Santana Row to buy Ice cream and some cookies for Tails. It's sooo delicious")
+        Greeting(shouldPlaySound = false)
     }
 }
