@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +17,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -221,12 +226,62 @@ fun Greeting(shouldPlaySound: Boolean) {
                         modifier = Modifier
                             .padding(horizontal = 10.dp, vertical = 20.dp)
                     )
+                    ChangeNameButton()
                 }
             }
         }
     }
 }
 
+@Composable
+fun ChangeNameButton() {
+    var catNameText by remember { mutableStateOf(TextFieldValue()) }
+    var shouldDisplayInputField by remember { mutableStateOf(false) }
+
+    FloatingActionButton(onClick = {
+        shouldDisplayInputField = true
+    }) {
+        Text(text = stringResource(id = R.string.change_cat_name_button))
+    }
+
+    if (shouldDisplayInputField) {
+        DisplayInputField(text = catNameText,
+            onTextChanged = { newText -> catNameText = newText },
+            onInputFieldClose = { shouldDisplayInputField = false }
+        )
+    }
+}
+
+@Composable
+fun DisplayInputField(
+    text: TextFieldValue,
+    onTextChanged: (TextFieldValue) -> Unit,
+    onInputFieldClose: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { onInputFieldClose() },
+        text = {
+            BasicTextField(
+                value = text,
+                onValueChange = { v -> onTextChanged(v) },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(200.dp, 30.dp)
+                    .border(3.dp, Color.hsl(200f, 0.70f, 0.25f))
+            )
+        },
+        confirmButton = {
+            Button(onClick = { onInputFieldClose() }) {
+                Text(text = "OK")
+            }
+        },
+        dismissButton = {
+            Button(onClick = { onInputFieldClose() }) {
+                Text(text = "Cancel")
+            }
+        }
+    )
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

@@ -16,4 +16,7 @@
     <string name="tabby_before_action_text">Tabby is looking for Friday...</string>
     <string name="tabby_after_action_text">It\'s just Wednesday, go back to work!</string>
     <string name="tabby_name">Tabby</string>
+<!--    Action Buttons-->
+    <string name="change_cat_name_button">Change cat name</string>
+
 </resources>

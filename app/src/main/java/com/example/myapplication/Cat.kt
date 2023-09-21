@@ -5,7 +5,7 @@ data class Cat(
     val beforeActionTextResId: Int,
     val afterActionTextResId: Int,
     val imageResId: Int,
-    val actionSoundEffectResId: Int
+    val actionSoundEffectResId: Int,
 ) {
 
 }
