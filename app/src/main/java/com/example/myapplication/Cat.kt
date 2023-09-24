@@ -1,11 +1,11 @@
 package com.example.myapplication
 
 data class Cat(
-    val nameResId: Int,
+    var name: String,
     val beforeActionTextResId: Int,
     val afterActionTextResId: Int,
     val imageResId: Int,
     val actionSoundEffectResId: Int,
 ) {
-
+    fun setCatName(newName: String) {name = newName}
 }

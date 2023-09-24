@@ -65,48 +65,43 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(shouldPlaySound: Boolean) {
-    var result by remember { mutableStateOf(1) }
+    var result by remember { mutableStateOf(0) }
     var isCatHappy by remember {
         mutableStateOf(false)
     }
 
     val catTails = Cat(
-        nameResId = R.string.tails_name,
+        name = stringResource(id = R.string.tails_name),
         beforeActionTextResId = R.string.tails_before_action_text,
         afterActionTextResId = R.string.tails_after_action_text,
         imageResId = R.drawable.tails,
         actionSoundEffectResId = R.raw.tails_after_action_sound_effect
     )
     val catBruno = Cat(
-        nameResId = R.string.bruno_name,
+        name = stringResource(id = R.string.bruno_name),
         beforeActionTextResId = R.string.bruno_before_action_text,
         afterActionTextResId = R.string.bruno_after_action_text,
         imageResId = R.drawable.bruno,
         actionSoundEffectResId = R.raw.bruno_after_action_sound_effect
     )
     val catTabby = Cat(
-        nameResId = R.string.tabby_name,
+            name = stringResource(id = R.string.tabby_name),
         beforeActionTextResId = R.string.tabby_before_action_text,
         afterActionTextResId = R.string.tabby_after_action_text,
         imageResId = R.drawable.tabby,
         actionSoundEffectResId = R.raw.tabby_after_action_sound_effect
     )
 
-    val currentCat = when (result) {
-        1 -> catTails
-        2 -> catBruno
-        else -> {
-            catTabby
-        }
+    var cats by remember {
+        mutableStateOf(listOf(catTails, catBruno, catTabby))
     }
 
-    val catName = stringResource(id = currentCat.nameResId)
     val actionText =
-        if (isCatHappy) stringResource(id = currentCat.afterActionTextResId)
-        else stringResource(id = currentCat.beforeActionTextResId)
+        if (isCatHappy) stringResource(id = cats[result].afterActionTextResId)
+        else stringResource(id = cats[result].beforeActionTextResId)
     val catSound = if (shouldPlaySound) MediaPlayer.create(
         LocalContext.current,
-        currentCat.actionSoundEffectResId
+        cats[result].actionSoundEffectResId
     ) else null
 
     catSound?.setOnCompletionListener {
@@ -149,7 +144,7 @@ fun Greeting(shouldPlaySound: Boolean) {
 
             }
             Text(
-                text = "Hello $catName !",
+                text = "Hello ${cats[result].name} !",
                 fontSize = 35.sp,
                 fontWeight = FontWeight(350),
                 textAlign = TextAlign.Center,
@@ -184,7 +179,7 @@ fun Greeting(shouldPlaySound: Boolean) {
                                 .size(300.dp, 300.dp)
                                 .clip(RoundedCornerShape(24.dp)),
                             contentScale = ContentScale.Crop,
-                            painter = painterResource(currentCat.imageResId),
+                            painter = painterResource(cats[result].imageResId),
                             contentDescription = "Funny_cat_1"
                         )
                     }
@@ -200,7 +195,7 @@ fun Greeting(shouldPlaySound: Boolean) {
                                 result = result - 1
                                 isCatHappy = false
                             },
-                            enabled = result > 1,
+                            enabled = result > 0,
                         ) {
 
                             Text(
@@ -211,7 +206,7 @@ fun Greeting(shouldPlaySound: Boolean) {
                         Button(onClick = {
                             result = result + 1
                             isCatHappy = false
-                        }, enabled = result < 3) {
+                        }, enabled = result < 2) {
                             Text(
                                 stringResource(R.string.next_button),
                                 fontSize = 20.sp
@@ -226,7 +221,9 @@ fun Greeting(shouldPlaySound: Boolean) {
                         modifier = Modifier
                             .padding(horizontal = 10.dp, vertical = 20.dp)
                     )
-                    ChangeNameButton()
+                    ChangeNameButton(
+                        onTextChanged = { value -> cats[result].name = value }
+                    )
                 }
             }
         }
@@ -234,19 +231,16 @@ fun Greeting(shouldPlaySound: Boolean) {
 }
 
 @Composable
-fun ChangeNameButton() {
-    var catNameText by remember { mutableStateOf(TextFieldValue()) }
+fun ChangeNameButton(onTextChanged: (String) -> Unit) {
     var shouldDisplayInputField by remember { mutableStateOf(false) }
 
-    FloatingActionButton(onClick = {
-        shouldDisplayInputField = true
-    }) {
+    FloatingActionButton(onClick = { shouldDisplayInputField = true }) {
         Text(text = stringResource(id = R.string.change_cat_name_button))
     }
 
     if (shouldDisplayInputField) {
-        DisplayInputField(text = catNameText,
-            onTextChanged = { newText -> catNameText = newText },
+        DisplayInputField(
+            onTextChanged = { value -> onTextChanged(value) },
             onInputFieldClose = { shouldDisplayInputField = false }
         )
     }
@@ -254,16 +248,17 @@ fun ChangeNameButton() {
 
 @Composable
 fun DisplayInputField(
-    text: TextFieldValue,
-    onTextChanged: (TextFieldValue) -> Unit,
+    onTextChanged: (String) -> Unit,
     onInputFieldClose: () -> Unit
 ) {
+    var inputValue by remember { mutableStateOf(TextFieldValue()) }
+
     AlertDialog(
         onDismissRequest = { onInputFieldClose() },
         text = {
             BasicTextField(
-                value = text,
-                onValueChange = { v -> onTextChanged(v) },
+                value = inputValue,
+                onValueChange = { inputValue = it },
                 modifier = Modifier
                     .padding(16.dp)
                     .size(200.dp, 30.dp)
@@ -271,7 +266,10 @@ fun DisplayInputField(
             )
         },
         confirmButton = {
-            Button(onClick = { onInputFieldClose() }) {
+            Button(onClick = {
+                onInputFieldClose()
+                onTextChanged(inputValue.text)
+            }) {
                 Text(text = "OK")
             }
         },
